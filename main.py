@@ -57,7 +57,46 @@ img_name_list = ['image','mask','new_h']
 
 
 class Particle():
-     def __init(self,x_dim, y_dim):
-          self.position = np.array([int(np.random.rand()*x_dim), int(np.random.rand()*y_dim)])
-          self.pbest_position = self.position
-          self.pbest_value = 0
+    def __init__(self,image):
+        y_dim,x_dim = image.shape
+
+        self.image = image
+        self.position = np.array([int(np.random.rand()*x_dim), int(np.random.rand()*y_dim)])
+        self.pbest_position = self.position
+        self.pbest_value = 0
+        self.velocity = np.array([0,0])
+        self.fitness = self.calc_fitness()
+
+    def __repr__(self):
+        return str("I am at {} my pbest is {} \n ".format(self.position, self.pbest_position))
+
+    def move(self):
+        self.position = self.position + self.velocity
+    
+    def calc_fitness(self):
+        #TODO Lokasi lokasi pojok tidak dapat dihitung fitnessnya
+        self.fitness = self.image[self.position[0]-5:self.position[0]+5,self.position[1]-5:self.position[1]+5].mean()
+
+class World():
+    def __init__(self,n_particle,image):
+        
+        self.particles = []
+
+        for i in range(n_particle):
+            self.particles.append(Particle(image))
+                    
+        # self.particles_fitness = []
+
+        # for i in range(n_particle):
+        #     self.particles_fitness.append(self.particles[i].fitness)
+
+    
+
+
+a=World(10,new_h)
+
+print(a.particles[0].fitness)
+
+# a.particles[0].calc_fitness(new_h)
+
+# print(a.particles[0].fitness)
